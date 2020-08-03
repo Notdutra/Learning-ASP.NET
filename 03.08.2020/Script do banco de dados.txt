@@ -1,0 +1,299 @@
+CREATE TABLE Medicos(
+CRM VARCHAR(14) primary key,
+NOME VARCHAR(50) not null,
+Cod_especialidade int not null
+);
+
+CREATE TABLE Triagem(
+Cod_triagem int identity(1,1) primary key,
+CPF VARCHAR(11) NOT NULL,
+Coren VARCHAR(14) NOT NULL,
+DataConsulta DATETIME NOT NULL,
+DescricaoPaciente VARCHAR(50) NULL,
+prioridade numeric(1),
+CONSTRAINT ck_prioridade  CHECK (prioridade  IN (1,2,3,4,5))
+);
+
+CREATE TABLE Pacientes(
+CPF VARCHAR(11) primary key,
+NOME VARCHAR(50) not null,
+SEXO CHAR(1) not null
+CONSTRAINT ck_sexo  CHECK( sexo IN ('M','F'))
+);
+
+CREATE TABLE Especialidades(
+Nome VARCHAR(20) UNIQUE not null ,
+Cod_especialidade int identity(1,1) primary key,
+ValorConsulta numeric (4) not null,
+Descricao VARCHAR(100) not null
+);
+
+CREATE TABLE Consultas(
+CPF VARCHAR(11) not null,
+CRM VARCHAR(14) not null,
+Coren VARCHAR(14) null,
+DataConsulta DATETIME not null,
+Cod_Triagem int null,
+Cod_Consultas int identity(1,1) primary key,
+CONSTRAINT ck_marcado  unique (CPF, DataConsulta, CRM, Coren, Cod_Triagem)
+);
+
+CREATE TABLE Enfermeiros(
+COREN VARCHAR(14) primary key,
+NOME VARCHAR(50) not null,
+);
+
+
+
+ALTER TABLE Consultas
+ADD
+CONSTRAINT FK_MEDICOS
+FOREIGN KEY (CRM)
+REFERENCES MEDICOS (CRM);
+
+ALTER TABLE Consultas
+ADD
+CONSTRAINT FK_PACIENTES
+FOREIGN KEY (CPF)
+REFERENCES PACIENTES (CPF);
+
+ALTER TABLE Consultas
+ADD
+CONSTRAINT FK_ENFERMEIROS
+FOREIGN KEY (Coren)
+REFERENCES ENFERMEIROS (Coren);
+
+ALTER TABLE Consultas
+ADD
+CONSTRAINT FK_TRIAGEM
+FOREIGN KEY (cod_triagem)
+REFERENCES Triagem (cod_triagem);
+
+ALTER TABLE TRIAGEM
+ADD
+CONSTRAINT FK_CPF
+FOREIGN KEY (CPF)
+REFERENCES PACIENTES (CPF);
+
+ALTER TABLE TRIAGEM
+ADD
+CONSTRAINT FK_COREN
+FOREIGN KEY (COREN)
+REFERENCES ENFERMEIROS (COREN);
+
+ALTER TABLE MEDICOS
+ADD
+CONSTRAINT FK_ESPECIALIDADES
+FOREIGN KEY (cod_ESPECIALIDADE)
+REFERENCES ESPECIALIDADES (cod_ESPECIALIDADE);
+--PACIENTES: - 10
+
+insert into pacientes (cpf, nome, sexo) values ('13145232242', 'Rosa Silveira', 'F');
+
+insert into pacientes (cpf, nome, sexo) values ('52395029582', 'Pedro Gusmão', 'M');
+
+insert into pacientes (cpf, nome, sexo) values ('84495039284', 'Rafael Gomes', 'M');
+
+insert into pacientes (cpf, nome, sexo) values ('40920540395', 'Pietra Oliveira', 'F');
+
+insert into pacientes (cpf, nome, sexo) values ('57294953043', 'Paola da Silva', 'F');
+
+insert into pacientes (cpf, nome, sexo) values ('11122233345', 'Kratos de Machado', 'M');
+
+insert into pacientes (cpf, nome, sexo) values ('05219428134', 'Joel Silveira', 'M');
+
+insert into pacientes (cpf, nome, sexo) values ('81643218521', 'Juliana Rosa', 'F');
+
+insert into pacientes (cpf, nome, sexo) values ('14754621894', 'Mariana Fantinelli', 'F');
+
+insert into pacientes (cpf, nome, sexo) values ('84316574921', 'Fernando Augusto', 'M');
+
+
+--ENFERMEIROS: - 10
+insert into enfermeiros (nome, coren) values ('Bruna Pereira', '43253244523456');
+
+insert into enfermeiros (nome, coren) values ('Rodrigo Nunes', '63465345635678');
+
+insert into enfermeiros (nome, coren) values ('Junior da Costa', '94885729384729');
+
+insert into enfermeiros (nome, coren) values ('Gabriel Silveira', '73421381147293');
+
+insert into enfermeiros (nome, coren) values ('Vinicius Oliveira', '36221381147293');
+
+insert into enfermeiros (nome, coren) values ('Mateus Munin', '63729264813726');
+
+insert into enfermeiros (nome, coren) values ('Sandra Mila', '89251676254293');
+
+insert into enfermeiros (nome, coren) values ('Guilherme Silva', '81627539471623');
+
+insert into enfermeiros (nome, coren) values ('Manuel Sidreira', '92637841926348');
+
+insert into enfermeiros (nome, coren) values ('Maria Santini', '13579246801029');
+
+
+--ESPECIALIDADE: - 9
+--TODO adicionar salário por especialidade.
+
+INSERT INTO Especialidades(NOME, Descricao,ValorConsulta) VALUES('Neurologista','Trata dos distúrbios estruturais do sistema nervoso', 300);
+
+INSERT INTO Especialidades (Nome,Descricao, ValorConsulta) VALUES ('Cardiologista','Especialista em reconstrução de Artéria Aorta', 400);
+
+INSERT INTO Especialidades (Nome,Descricao,ValorConsulta ) VALUES ('fonoaudiólogo','Especialista em fala e dicção', 100);
+
+INSERT INTO Especialidades (Nome,Descricao,ValorConsulta ) VALUES ('Oncologista', 'estuda os cancros e a forma de como essas doenças se desenvolvem', 150);
+
+INSERT INTO Especialidades (Nome,Descricao,ValorConsulta ) VALUES ('Infectologista','Especialista no estudo das doenças causadas por diversos patógenos', 200);
+
+INSERT INTO Especialidades (Nome,Descricao,ValorConsulta ) VALUES ('Oftalmologista','Mestre em problema de córnea decorrentes de acidentes', 175);
+
+INSERT INTO Especialidades (Nome,Descricao,ValorConsulta ) VALUES ('Anestesista','Especialista em anestesias para procedimentos cirurgicos',300);
+
+INSERT INTO Especialidades (Nome,Descricao,ValorConsulta ) VALUES ('Neonatologista',' Especialista de recém-nascido', 415);
+
+INSERT INTO Especialidades (Nome,Descricao,ValorConsulta ) VALUES ('Psiquiatra',' É responsável pelo diagnóstico e tratamento dos chamados Transtornos Mentais e de Comportamento.', 250);
+
+INSERT INTO Especialidades (Nome,Descricao,ValorConsulta ) VALUES ('mastologia',' É responsável pelo estudo das glândulas mamárias', 275);
+
+
+
+
+
+
+--MEDICOS:  - 10
+--TODO verificar validade dos inserts
+
+INSERT INTO Medicos(CRM, NOME, Cod_Especialidade) VALUES('1234567','Alexandre Carlos', 1)
+
+INSERT INTO Medicos(CRM, NOME, Cod_Especialidade) VALUES('2241546','Gabriel Rodrigues', 2)
+
+INSERT INTO Medicos(CRM, NOME, Cod_Especialidade) VALUES('3234546','Breno Carlos', 3)
+
+INSERT INTO Medicos(CRM, NOME, Cod_Especialidade) VALUES('4654321','Jurandir Santana', 4)
+
+INSERT INTO Medicos(CRM, NOME, Cod_Especialidade) VALUES('5657723','Fernanda Santana', 5)
+
+INSERT INTO Medicos(CRM, NOME, Cod_Especialidade) VALUES('6862018','Carlos de Oliveira', 6)
+
+INSERT INTO Medicos(CRM, NOME, Cod_Especialidade) VALUES('6648335','Jasão Abu', 7)
+
+INSERT INTO Medicos(CRM, NOME, Cod_Especialidade) VALUES('2325592','Enzo Gabriel', 8)
+
+INSERT INTO Medicos(CRM, NOME, Cod_Especialidade) VALUES('7846252','Sandra Verardi', 9)
+
+INSERT INTO Medicos(CRM, NOME, Cod_Especialidade) VALUES('1388315','Mafalda Pinheiro', 10)
+
+
+--TRIAGEM:
+
+INSERT INTO TRIAGEM (CPF, COREN, DATACONSULTA, DESCRICAOPACIENTE, PRIORIDADE)
+VALUES ('52395029582', '43253244523456', CONVERT(DATETIME, '26-JAN-2019 15:45:17',120), 'Paciente parece saudável', '5');
+
+INSERT INTO TRIAGEM (CPF, COREN, DATACONSULTA, DESCRICAOPACIENTE, PRIORIDADE)
+VALUES ('05219428134', '94885729384729', CONVERT(DATETIME, '22-MAR-2019 16:47:17', 120), 'Paciente sente muita dor', '1');
+
+INSERT INTO TRIAGEM (CPF, COREN, DATACONSULTA, DESCRICAOPACIENTE, PRIORIDADE)
+VALUES ('13145232242', '73421381147293', CONVERT(DATETIME,'22-ABR-2019 11:42:53', 121), 'Paciente sente enjoo', '3');
+
+INSERT INTO TRIAGEM (CPF, COREN, DATACONSULTA, DESCRICAOPACIENTE, PRIORIDADE)
+VALUES ('84316574921', '73421381147293',CONVERT(DATETIME,'12-JUL-2020 10:57:23', 121), 'Paciente vomitando', '1');
+
+INSERT INTO TRIAGEM (CPF, COREN, DATACONSULTA, DESCRICAOPACIENTE, PRIORIDADE)
+VALUES ('14754621894', '13579246801029', CURRENT_TIMESTAMP, 'Paciente desacordado', '5');
+
+INSERT INTO TRIAGEM (CPF, COREN, DATACONSULTA, DESCRICAOPACIENTE, PRIORIDADE)
+VALUES ('81643218521', '73421381147293', CURRENT_TIMESTAMP, 'Paciente caiu da escada e machucou a perna', '4');
+
+INSERT INTO TRIAGEM (CPF, COREN, DATACONSULTA, DESCRICAOPACIENTE, PRIORIDADE)
+VALUES ('40920540395', '36221381147293', CURRENT_TIMESTAMP, 'Paciente com corte raso na perna', '1');
+
+
+--CONSULTAS:
+
+INSERT INTO Consultas(CPF,CRM,Coren,DataConsulta,Cod_Triagem) VALUES('52395029582','2241546','63465345635678',CONVERT(DATETIME,'26-JAN-2019 15:45:17',120),'1');
+
+INSERT INTO Consultas(CPF,CRM,Coren,DataConsulta,Cod_Triagem) VALUES('05219428134','1234567','94885729384729', CONVERT(DATETIME, '22-MAR-2019 16:47:17', 120),'2');
+
+INSERT INTO Consultas(CPF,CRM,Coren,DataConsulta,Cod_Triagem) VALUES('14754621894',3234546,'94885729384729', CONVERT(DATETIME, '21-DEZ-2019 13:23:27',120),'3');
+
+INSERT INTO Consultas(CPF,CRM,DataConsulta,Cod_Triagem) VALUES('13145232242',4654321,CONVERT(DATETIME,'22-ABR-2019 11:42:53', 121),'4');
+
+INSERT INTO Consultas(CPF,CRM,DataConsulta,Cod_Triagem) VALUES('84316574921',5657723,CONVERT(DATETIME,'12-JUL-2020 10:57:23', 121),'5');
+
+INSERT INTO Consultas(CPF,CRM,DataConsulta,Cod_Triagem) VALUES(11122233345,6862018,CONVERT(DATETIME,'12-JUL-2018 07:37:33', 111),'6');
+
+INSERT INTO Consultas(CPF,CRM,DataConsulta,Cod_Triagem) VALUES('05219428134','6648335',CONVERT(DATETIME,'18-MAR-2019 19:43:22',120),'7');
+
+INSERT INTO Consultas(CPF,CRM,DataConsulta) VALUES(81643218521,2325592,CONVERT(DATETIME,'17-JUN-2019 11:57:23',120));
+
+INSERT INTO Consultas(CPF,CRM,DataConsulta) VALUES(14754621894,7846252,CONVERT(DATETIME,'19-ABR-2017 08:44:13',120));
+
+INSERT INTO Consultas(CPF,CRM,DataConsulta) VALUES(84316574921,1388315,CONVERT(DATETIME,'28-JUL-2020 10:14:23',120));
+
+
+
+
+--SELECTS 
+
+--1. Média de valor das consultas que teve enfermeiro realizando a triagem;
+
+SELECT COUNT (*),AVG(Especialidades.ValorConsulta)
+FROM Consultas INNER JOIN Medicos ON Consultas.CRM = Medicos.CRM
+INNER JOIN Especialidades ON Medicos.Cod_especialidade = Especialidades.Cod_especialidade
+WHERE Consultas.Cod_Triagem IS NOT NULL
+
+--2. Quantidade de neurologistas que atenderam pacientes do sexo masculino, em --consultas de prioridade 3;
+
+SELECT COUNT(*) from Especialidades
+INNER JOIN Medicos on Medicos.cod_especialidade = Especialidades.Cod_especialidade
+INNER JOIN Consultas on Consultas.CRM = Medicos.CRM
+INNER JOIN Triagem on Triagem.Cod_Triagem = Consultas.Cod_triagem
+INNER JOIN Pacientes on Pacientes.CPF = Consultas.CPF
+WHERE Especialidades.Nome = 'Neurologista' and Pacientes.SEXO = 'M' and Triagem.prioridade = 3
+
+-inserts para questao 2
+INSERT INTO TRIAGEM (CPF, COREN, DATACONSULTA, DESCRICAOPACIENTE, PRIORIDADE)
+VALUES ('52395029582', '43253244523456', CURRENT_TIMESTAMP, 'Paciente em estado grave', '3');
+
+INSERT INTO Consultas (CPF,CRM,DataConsulta, Cod_Triagem) VALUES('52395029582', '1234567', CURRENT_TIMESTAMP, 8);
+
+
+--3. Quantidade de pacientes que foram atendidos por médicos que cobraram mais de R$ --100, na primeira quinzena do mês;
+SELECT COUNT(PAC.CPF) AS QUANTIDADE_PACIENTES
+FROM PACIENTES PAC JOIN CONSULTAS CON ON (PAC.CPF = CON.CPF)
+JOIN MEDICOS MED ON (CON.CRM = MED.CRM)
+JOIN ESPECIALIDADES ESP ON (MED.Cod_especialidade = ESP.Cod_especialidade)
+WHERE ESP.ValorConsulta > 100 AND DATEPART(DAY, CON.DataConsulta) < 15
+
+
+--4. Triagem em que os pacientes tiveram algum problema na perna
+	SELECT DISTINCT PAC.NOME, TRI.DESCRICAOPACIENTE
+FROM PACIENTES PAC JOIN TRIAGEM TRI ON (PAC.CPF = TRI.CPF)
+WHERE TRI.DescricaoPaciente LIKE '%PERNA%'
+ORDER BY PAC.NOME
+
+--5. Nome dos médicos que atendem só pela manhã. (Manhã entre 06h AM e 12h)
+SELECT DISTINCT MED.NOME 
+FROM MEDICOS MED JOIN CONSULTAS CON ON (MED.CRM = CON.CRM)
+WHERE DATEPART(HOUR, CON.DataConsulta) > 6 AND DATEPART(HOUR, CON.DataConsulta) < 12
+ORDER BY NOME
+--5.1 Nome dos enfermeiros que atendem só pela manhã.
+SELECT DISTINCT ENF.NOME 
+FROM ENFERMEIROS ENF JOIN TRIAGEM TRI ON (ENF.COREN = TRI.Coren)
+WHERE DATEPART(HOUR, TRI.DataConsulta) > 6 AND DATEPART(HOUR, TRI.DataConsulta) < 12
+ORDER BY NOME
+
+--6. Média de valor das consultas no ano de 2019.
+
+Select avg(ValorConsulta)
+From Consultas C inner join Medicos M on C.crm = M.crm
+inner join Especialidades  E on M.Cod_especialidade =  E.Cod_especialidade
+where C.DataConsulta between (CONVERT(DateTime, '31-DEZ-2018 23:59:59', 120)) and (CONVERT(DateTime, '01-JAN-2020 00:00:01', 120));
+
+
+
+
+Select avg(ValorConsulta)
+From Consultas C inner join Medicos M on C.crm = M.crm
+inner join Especialidades  E on M.Cod_especialidade =  E.Cod_especialidade
+where DATEPART(YEAR, C.DataConsulta) =2019
+
