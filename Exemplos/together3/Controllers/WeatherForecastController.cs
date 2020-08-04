@@ -8,7 +8,7 @@ using Microsoft.Extensions.Logging;
 namespace together3.Controllers
 {
     [ApiController]
-    [Route("[controller]")]
+    [Route("[controller]")] // "[controller]" vai ser WeatherForecast ignorando o "Controller"
     public class WeatherForecastController : ControllerBase
     {
         private static readonly string[] Summaries = new[]
