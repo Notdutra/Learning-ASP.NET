@@ -7,6 +7,7 @@ namespace together3 {
         public int TemperatureC { get; set; }
 
         public int TemperatureF => 32 + (int) (TemperatureC / 0.5556);
+        //! Converte o valor de temperatura para Farenheit
 
         public string Summary { get; set; }
     }
